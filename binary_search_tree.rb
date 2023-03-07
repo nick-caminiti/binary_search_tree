@@ -6,7 +6,7 @@ class Node
   attr_reader :data
   attr_accessor :left, :right
 
-  def initialize(data, left, right)
+  def initialize(data, left = nil, right = nil)
     @data = data
     @left = left
     @right = right
@@ -39,6 +39,27 @@ class Tree
       Node.new(array[mid], left, right)
     end
   end
+
+  def insert(value)
+    current_node = @root
+    until current_node.left.nil? && current_node.right.nil? 
+      return if value == current_node.data
+      
+      current_node = if value < current_node.data
+                        current_node.left
+                      else
+                        current_node.right
+                      end                    
+    
+      if current_node.left.nil? && value < current_node.data
+        current_node.left = Node.new(value) 
+        return
+      elsif current_node.right.nil? && value > current_node.data
+        current_node.right = Node.new(value) 
+        return
+      end
+    end
+  end
 end
 
 array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
@@ -46,4 +67,18 @@ array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 p array.uniq.sort
 tree = Tree.new(array)
 p tree
+tree.pretty_print
+tree.insert(2)
+tree.insert(320)
+tree.insert(323)
+tree.insert(321)
+tree.insert(320)
+tree.insert(319)
+tree.insert(315)
+tree.insert(24)
+# tree.pretty_print
+tree.insert(9)
+tree.insert(30)
+# tree.insert()
+tree.insert(6)
 tree.pretty_print
