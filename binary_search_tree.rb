@@ -114,6 +114,22 @@ class Tree
       replace_node.right = current_node.right
     end
   end
+
+  def find(value)
+    current_node = @root
+    present = false
+    until present
+      present = true if value == current_node.data
+      if value < current_node.data
+        break if current_node.left.nil?
+        current_node =  current_node.left   
+      elsif value > current_node.data
+        break if current_node.right.nil?
+        current_node = current_node.right
+      end
+    end
+    current_node if present
+  end
 end
 
 array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
@@ -138,3 +154,4 @@ tree.insert(6)
 tree.pretty_print
 tree.delete(324)
 tree.pretty_print
+p tree.find(67)
