@@ -63,16 +63,55 @@ class Tree
 
   def delete(value)
     current_node = @root
+    parent_node = nil
     present = false
-    until present || (current_node.left.nil? && current_node.right.nil?)
+    until present
       present = true if value == current_node.data
       if value < current_node.data
         break if current_node.left.nil?
-        current_node = current_node.left        
+        parent_node = current_node
+        current_node = current_node.left   
       elsif value > current_node.data
         break if current_node.right.nil?
+        parent_node = current_node
         current_node = current_node.right
       end
+    end
+    remove_node(current_node, parent_node) if present
+  end
+
+  def remove_node(current_node, parent_node)
+    if current_node.left.nil? && current_node.right.nil?
+      if current_node.data < parent_node.data
+        parent_node.left = nil
+      else
+        parent_node.right = nil
+      end
+    elsif current_node.left.nil? || current_node.right.nil?
+      if current_node.left.nil?
+        current_node.data < parent_node.data ? parent_node.left = current_node.right : parent_node.right = current_node.right
+      else
+        current_node.data < parent_node.data ? parent_node.left = current_node.left : parent_node.right = current_node.left
+      end
+    else
+      replace_node_parent = current_node
+      replace_node = current_node.right
+      until replace_node.left.nil?
+        replace_node_parent = replace_node
+        replace_node = replace_node.left
+      end
+      
+      remove_node(replace_node, replace_node_parent)
+
+      if parent_node.nil?
+        @root = replace_node
+      elsif current_node.data < parent_node.data 
+        parent_node.left = replace_node
+      else
+        parent_node.right = replace_node
+      end
+      replace_node.left = current_node.left
+      replace_node.right = current_node.right
     end
   end
 end
@@ -97,5 +136,5 @@ tree.insert(30)
 # tree.insert()
 tree.insert(6)
 tree.pretty_print
-tree.delete(320)
-# tree.pretty_print
+tree.delete(324)
+tree.pretty_print
