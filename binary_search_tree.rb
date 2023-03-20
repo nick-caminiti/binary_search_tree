@@ -130,6 +130,42 @@ class Tree
     end
     current_node if present
   end
+
+  def level_order
+    queue = []
+    return_array = []
+    queue[0] = @root
+
+    until queue.empty?
+      current_node = queue[0]
+      queue.shift
+      queue.push(current_node.left) unless current_node.left.nil?
+      queue.push(current_node.right) unless current_node.right.nil?        
+      if block_given?
+        yield current_node
+      else
+        return_array.push(current_node.data)
+      end
+    end
+    return_array unless block_given?
+  end
+
+  def level_order_recur(queue = [@root],return_array = [], &block)
+    if queue.empty?
+      return return_array unless block_given?
+      return
+    end
+    current_node = queue[0]
+    queue.shift
+    queue.push(current_node.left) unless current_node.left.nil?
+    queue.push(current_node.right) unless current_node.right.nil?        
+    if block_given?
+      yield current_node
+    else
+      return_array.push(current_node.data)
+    end
+    level_order_recur(queue, return_array, &block)    
+  end
 end
 
 array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
@@ -154,4 +190,6 @@ tree.insert(6)
 tree.pretty_print
 tree.delete(324)
 tree.pretty_print
-p tree.find(67)
+puts tree.find(67)
+tree.level_order_recur { |node| puts node.data }
+p tree.level_order_recur
