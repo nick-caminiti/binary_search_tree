@@ -158,7 +158,7 @@ class Tree
     current_node = queue[0]
     queue.shift
     queue.push(current_node.left) unless current_node.left.nil?
-    queue.push(current_node.right) unless current_node.right.nil?        
+    queue.push(current_node.right) unless current_node.right.nil?
     if block_given?
       yield current_node
     else
@@ -166,6 +166,40 @@ class Tree
     end
     level_order_recur(queue, return_array, &block)    
   end
+
+  def preorder(return_array = [], root = @root, &block)
+    if block_given?
+      yield root
+    else
+      return_array.push(root.data)
+    end
+    preorder(return_array, root.left, &block) unless root.left.nil?
+    preorder(return_array, root.right, &block) unless root.right.nil?
+    return return_array
+  end
+
+  def inorder(return_array = [], root = @root, &block)
+    inorder(return_array, root.left, &block) unless root.left.nil?
+    if block_given?
+      yield root
+    else
+      return_array.push(root.data)
+    end
+    inorder(return_array, root.right, &block) unless root.right.nil?
+    return return_array
+  end
+
+  def postorder(return_array = [], root = @root, &block)
+    postorder(return_array, root.left, &block) unless root.left.nil?
+    postorder(return_array, root.right, &block) unless root.right.nil?
+    if block_given?
+      yield root
+    else
+      return_array.push(root.data)
+    end
+    return return_array
+  end
+
 end
 
 array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
@@ -191,5 +225,7 @@ tree.pretty_print
 tree.delete(324)
 tree.pretty_print
 puts tree.find(67)
-tree.level_order_recur { |node| puts node.data }
-p tree.level_order_recur
+# tree.level_order_recur { |node| puts node.data }
+# p tree.level_order_recur
+tree.postorder { |node| puts node.data }
+p tree.postorder
