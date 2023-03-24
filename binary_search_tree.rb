@@ -26,6 +26,8 @@ class Tree
   end
 
   def build_tree(array)
+    return nil if array.empty?
+
     array = array.uniq.sort
     mid = array.length / 2
     case array.length
@@ -41,6 +43,7 @@ class Tree
   end
 
   def insert(value)
+    # can rewrite this recursively
     current_node = @root
     until current_node.left.nil? && current_node.right.nil? 
       return if value == current_node.data
@@ -62,6 +65,7 @@ class Tree
   end
 
   def delete(value)
+    # has to be a way to make this simpler
     current_node = @root
     parent_node = nil
     present = false
@@ -116,6 +120,7 @@ class Tree
   end
 
   def find(value)
+    # can rewrite recursively
     current_node = @root
     present = false
     until present
